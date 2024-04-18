@@ -114,6 +114,7 @@ const Index: React.FC = () => {
     loadData()
   },[])
 
+
   const onFinish  =async (values:any) => {
     if(!params.id){
       message.error('接口不存在');
@@ -125,7 +126,13 @@ const Index: React.FC = () => {
         id:params.id,
         ...values
       })
-      setInvokeRes(res.data);
+      //将后端传来的Object对象中的数据转化为字符串
+
+      console.log(res.data)
+      console.log(JSON.stringify(res.data));
+      //将结果转化为JSON对象
+
+      setInvokeRes(JSON.stringify(res.data));
       // alert("res.data --- "+res.data)
       // alert(invokeRes);
       message.success('请求成功');
@@ -136,10 +143,21 @@ const Index: React.FC = () => {
     }
     setInvokeLoading(false);
   };
-
-  const onFinishFailed: FormProps["onFinishFailed"] = (errorInfo) => {
-    console.log('Failed:', errorInfo);
+  const handleSubmit = (values:any) => {
+    try {
+      // 尝试将字符串解析为对象
+      values.userRequestParams = JSON.parse(values.userRequestParams);
+      // 现在values.userRequestParams是一个JavaScript对象，可以提交给后端
+      onFinish(values);
+    } catch (error) {
+      // 解析失败，显示错误消息
+      console.error('用户请求参数格式错误，请确保输入有效的JSON格式');
+      message.error('用户请求参数格式错误，请确保输入有效的JSON格式');
+    }
   };
+  // const onFinishFailed: FormProps["onFinishFailed"] = (errorInfo) => {
+  //   console.log('Failed:', errorInfo);
+  // };
   return (
     <PageContainer title={"查看接口文档"}>
       <Card>
@@ -154,13 +172,7 @@ const Index: React.FC = () => {
       <Card>
         <Form layout={"vertical"}
           name="invoke"
-          /*labelCol={{ span: 8 }}
-          wrapperCol={{ span: 16 }}
-          style={{ maxWidth: 600 }}
-          initialValues={{ remember: true }}*/
-          onFinish={onFinish}
-          // onFinishFailed={onFinishFailed}
-          // autoComplete="off"
+          onFinish={handleSubmit}
         >
           <Form.Item
             label="用户调用接口请求参数"

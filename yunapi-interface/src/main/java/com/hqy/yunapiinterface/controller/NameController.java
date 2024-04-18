@@ -2,8 +2,10 @@ package com.hqy.yunapiinterface.controller;
 
 
 
+import cn.hutool.core.bean.BeanUtil;
 import com.hqy.yunapiclientsdk.model.entity.User;
 import com.hqy.yunapiclientsdk.utils.SignUtil;
+import com.hqy.yunapiclientsdk.model.response.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,7 +18,7 @@ import javax.servlet.http.HttpServletRequest;
  */
 @Slf4j
 @RestController
-@RequestMapping("/name")
+
 public class NameController {
     @GetMapping("/{name1}")
     public String getNameByGet(@PathVariable String name1,String name,HttpServletRequest request){
@@ -24,8 +26,8 @@ public class NameController {
 
         return "your name1 +name is --- "+name1+name;
     }
-    @PostMapping
-    public String getUserNameByPost(@RequestBody User user, HttpServletRequest request){
+    @PostMapping("/name")
+    public UserResponse getUserNameByPost(@RequestBody User user, HttpServletRequest request){
 
         // 鉴权已经在网关重新做过了
         /*//  以下逻辑校验应当交给服务端去校验
@@ -49,7 +51,8 @@ public class NameController {
         //todo  时间戳校验 和当前时间不超过五分钟
         *//*if(!timestamp)){
             throw new RuntimeException("用户没有权限");
-        }*//*
+        }*/
+        /*
 
         //todo  签名校验 正常得去数据库获取secretKey
         String currentSign = SignUtil.getSign(body,"abcdefgh");
@@ -59,9 +62,9 @@ public class NameController {
             throw new RuntimeException("签名校验失败");
         }*/
 
-        String res =  "your name is "+user.getUsername();
+        UserResponse userResponse = BeanUtil.copyProperties(user, UserResponse.class);
         // 调用次数加一
-
-        return res ;
+        log.info("访问成功 userResponse:{}" , userResponse);
+        return userResponse ;
     }
 }

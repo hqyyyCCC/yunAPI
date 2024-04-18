@@ -103,6 +103,7 @@ public class YunApiClient {
         try {
             Class<?> clazz = YunApiClient.class;
             if(params == null){
+                log.info("传入参数为空");
                 Method method = clazz.getMethod(methodName);
                 return method.invoke(this);
             }else{
@@ -160,7 +161,12 @@ public class YunApiClient {
             ErrorCode errorCode = JSONUtil.toBean(responseBody, ErrorCode.class);
             throw new ErrorApiException(errorCode.getCode(),errorCode.getMessage());
         }
-
+        try {
+            T obj = JSON.parseObject(responseBody,responseType);
+            log.info("解析得到的结果:{}",obj);
+        } catch (Exception e) {
+            throw new ErrorApiException(ErrorCode.NOT_FOUND_ERROR,"解析响应体为ResponseType失败");
+        }
         return JSON.parseObject(responseBody,responseType);
     }
 

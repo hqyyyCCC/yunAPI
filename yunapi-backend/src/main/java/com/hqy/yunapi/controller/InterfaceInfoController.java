@@ -321,7 +321,7 @@ public class InterfaceInfoController {
         YunApiClient tempYunApiClient = new YunApiClient(assessKey,secretKey);
         // String Json -》  实体对象  new Gson().fromJson(）
         // Gson gson = new Gson();
-        URL url = null;
+        URL url ;
         try {
             url = new URL(oldInterfaceInfo.getUrl());
         } catch (MalformedURLException e) {
@@ -331,7 +331,7 @@ public class InterfaceInfoController {
         String method = oldInterfaceInfo.getMethod();
 
         // String -> Map
-        Object res = null;
+        Object res ;
         try {
             res = tempYunApiClient.parseAddressAndInvokeInterface(new BaseRequest(path,method,userRequestParams,request));
         } catch (ErrorApiException e) {

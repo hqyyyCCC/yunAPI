@@ -25,10 +25,10 @@ interface ResponseStructure {
  * @doc https://umijs.org/docs/max/request#配置
  */
 export const requestConfig: RequestConfig = {
-  // baseURL: 'http://localhost:8101',
+  baseURL: 'http://localhost:8101',
   // 试用服务器
   // baseURL: 'http://8.149.128.43:8101',
-  baseURL: 'http://47.113.120.231:8101',
+  // baseURL: 'http://47.113.120.231:8101',
   withCredentials: true,
   // 错误处理： umi@3 的错误处理方案。
   errorConfig: {
