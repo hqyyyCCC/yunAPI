@@ -1,0 +1,2 @@
+##spring boot start  has to delete test.class,because start class have been deleted;
+org.springframework.boot.autoconfigure.EnableAutoConfiguration =com.hqy.yunapiclientsdk.YunApiClientConfig

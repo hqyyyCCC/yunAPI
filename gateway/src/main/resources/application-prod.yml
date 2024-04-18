@@ -1,0 +1,48 @@
+spring:
+  application:
+    name: gateway
+    exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+  cloud:
+    gateway:
+      routes:
+      - id: filter_route
+        uri: http://47.113.120.231:8123
+#        uri: http://8.149.128.43:8123
+#        uri: http://localhost:8123
+        filters:
+#          - AddRequestHeader=Test-addRequest,{name}
+#          - PrefixPath=/api
+#          - AddRequestParameter=name, {name_url}
+        predicates:
+          - Path=/api/**
+          - After=2021-03-31T17:42:47.789-07:00[America/Denver]
+server:
+  port: 8090
+  servlet:
+    context-path: /
+#          - Before=mycookie,mycookievalue
+logging:
+  level:
+    org:
+      springframework:
+        cloud:
+          gateway: trace
+dubbo:
+  application:
+    name: dubbo-springboot-demo-consumer
+    qos-enable: true
+    qos-accept-foreign-ip: false
+  protocol:
+    name: dubbo
+    port: -1
+  registry:
+    id: nacos-registry
+    address: nacos://172.28.247.22:8848
+#    address: nacos://localhost:8848
+#    address: nacos://172.28.53.217:8848
+
+  config-center:
+    timeout: 40000
+
+
+
