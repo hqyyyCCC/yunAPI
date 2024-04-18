@@ -24,11 +24,7 @@ public class NameController {
 
         return "your name1 +name is --- "+name1+name;
     }
-    @PostMapping("/")
-    public String getNameByPost(@RequestParam String name){
-        return "your name is "+name;
-    }
-    @PostMapping("/user")
+    @PostMapping
     public String getUserNameByPost(@RequestBody User user, HttpServletRequest request){
 
         // 鉴权已经在网关重新做过了

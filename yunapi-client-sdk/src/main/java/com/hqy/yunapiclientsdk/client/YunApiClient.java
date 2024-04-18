@@ -111,13 +111,16 @@ public class YunApiClient {
                 // Map -> Bean  通过BeanUtil.mapToBean
 
                 Method method = clazz.getMethod(methodName, paramsType);
+                log.info("获取到方法对象");
                 //将参数转为Bean 再执行方法
                 Object paramsObject = BeanUtil.mapToBean(params, paramsType,true, CopyOptions.create());
-                return method.invoke(paramsObject,paramsObject);
+                log.info("获取到参数转化为的Bean");
+                return method.invoke(this,paramsObject);
             }
         } catch (NoSuchMethodException e) {
             throw new ErrorApiException(ErrorCode.NOT_FOUND_ERROR, "通过url未找到对应方法");
         } catch (Exception e){
+            log.info("进入到invokeMethod方法调用方法执行时产生的异常");
             //处理剩下异常
             if(e.getCause() instanceof ErrorApiException){
                 ErrorApiException cause = (ErrorApiException) e.getCause();
