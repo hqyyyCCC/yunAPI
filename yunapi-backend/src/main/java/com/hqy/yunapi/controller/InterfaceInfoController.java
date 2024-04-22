@@ -1,26 +1,25 @@
 package com.hqy.yunapi.controller;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.ObjUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
 import com.hqy.yunapi.annotation.AuthCheck;
 import com.hqy.yunapi.common.*;
 import com.hqy.yunapi.constant.CommonConstant;
 import com.hqy.yunapi.exception.BusinessException;
 import com.hqy.yunapi.model.dto.interfaceInfo.InterfaceInfoAddRequest;
+import com.hqy.yunapi.model.dto.interfaceInfo.InterfaceInfoInvokeRequest;
 import com.hqy.yunapi.model.dto.interfaceInfo.InterfaceInfoQueryRequest;
 import com.hqy.yunapi.model.dto.interfaceInfo.InterfaceInfoUpdateRequest;
-import com.hqy.yunapi.model.dto.interfaceInfo.InterfaceInfoInvokeRequest;
-import com.hqy.yunapiclientsdk.exception.ErrorApiException;
-import com.hqy.yunapiclientsdk.model.BaseRequest;
-import com.hqy.yunapicommon.model.entity.InterfaceInfo;
-import com.hqy.yunapicommon.model.entity.User;
 import com.hqy.yunapi.model.enums.InterfaceInfoStatusEnum;
 import com.hqy.yunapi.service.InterfaceInfoService;
 import com.hqy.yunapi.service.UserService;
 import com.hqy.yunapiclientsdk.client.YunApiClient;
+import com.hqy.yunapiclientsdk.exception.ErrorApiException;
+import com.hqy.yunapiclientsdk.model.BaseRequest;
+import com.hqy.yunapicommon.model.entity.InterfaceInfo;
+import com.hqy.yunapicommon.model.entity.User;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -247,7 +246,7 @@ public class InterfaceInfoController {
         // String -> Map
         Object res ;
         try {
-            res = yunApiClient.parseAddressAndInvokeInterface(new BaseRequest(path,method,null,request));
+            res = yunApiClient.parseAddressAndInvokeInterface(new BaseRequest(path,method, BeanUtil.beanToMap(user),request));
         } catch (ErrorApiException e) {
             throw new BusinessException(e.getCode(),e.getMessage());
         }

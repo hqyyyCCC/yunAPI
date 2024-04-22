@@ -1,12 +1,13 @@
 package com.hqy.yunapiclientsdk.model.enums;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
 
 public enum UrlToMethodEnum {
-    NAME("/api/name","getUserNameByPost");
+    NAME("/api/name","getUserNameByPost"),
+    PoisonousChickenSoup("/api/poisonousChickenSoup","getPoisonousChickenSoup");
+
     private final String path;
     private final String method;
 

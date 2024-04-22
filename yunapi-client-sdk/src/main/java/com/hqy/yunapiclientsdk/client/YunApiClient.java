@@ -13,6 +13,7 @@ import com.hqy.yunapiclientsdk.exception.ErrorCode;
 import com.hqy.yunapiclientsdk.model.BaseRequest;
 import com.hqy.yunapiclientsdk.model.entity.User;
 import com.hqy.yunapiclientsdk.model.enums.UrlToMethodEnum;
+import com.hqy.yunapiclientsdk.model.response.PoisonousChickenSoupResponse;
 import com.hqy.yunapiclientsdk.model.response.UserResponse;
 import lombok.extern.slf4j.Slf4j;
 
@@ -62,17 +63,16 @@ public class YunApiClient {
     public UserResponse getUserNameByPost(User user) throws ErrorApiException {
         return sendRequest(GATEWAY_URL+ UrlToMethodEnum.NAME.getPath(),"POST", user, UserResponse.class);
     }
+    public PoisonousChickenSoupResponse getPoisonousChickenSoup() throws ErrorApiException {
+        return sendRequest(GATEWAY_URL+ UrlToMethodEnum.PoisonousChickenSoup.getPath(),"GET",null,PoisonousChickenSoupResponse.class);
+    }
 
-    /**
+    /**g
      * 根据url来解析方法
      * @param baseRequest
      * @return
      */
     public Object parseAddressAndInvokeInterface(BaseRequest baseRequest) throws ErrorApiException {
-       /* private String path;
-        private String method;
-        private Map<String,Object> params;
-        private HttpServletRequest httpServletRequest;*/
         //获取所有的Enum对象
         String path = baseRequest.getPath();
         String method = baseRequest.getMethod();
@@ -82,12 +82,12 @@ public class YunApiClient {
 
         Set<String> paths = UrlToMethodEnum.getPaths();
 
-//        collect.contains(path)
         log.info("请求地址:{},请求方法:{},请求参数:{}",path,method,paramsList);
         if(paths.contains(path)){
             if(path.equals(UrlToMethodEnum.NAME.getPath())){
-
-                res = invokeMethod(UrlToMethodEnum.NAME.getMethod(),paramsList,User.class);
+                res = invokeMethod(UrlToMethodEnum.NAME.getMethod(),paramsList,UserResponse.class);
+            } else if (path.equals(UrlToMethodEnum.PoisonousChickenSoup.getPath())) {
+                res = invokeMethod(UrlToMethodEnum.PoisonousChickenSoup.getMethod(),paramsList, PoisonousChickenSoupResponse.class);
             }
         }else{
             throw new ErrorApiException(ErrorCode.PARAMS_ERROR,"请求地址有误");
@@ -137,11 +137,18 @@ public class YunApiClient {
      */
     public <T> T sendRequest(String url,String method,Object params,Class<T> responseType)throws ErrorApiException {
         HttpRequest httpRequest;
-        String jsonStr = JSONUtil.toJsonStr(params);
+        String jsonStr;
+        if(params!=null){
+            jsonStr = JSONUtil.toJsonStr(params);
+        }else{
+            jsonStr = "";
+        }
+
         switch (method.toUpperCase()){
             case "GET":
                 log.info("params:{}",params);
                 httpRequest = HttpRequest.get(url);
+                break;
             case "POST":
                 log.info("封装post请求body:{}",jsonStr);
                 httpRequest=HttpRequest.post(url);
