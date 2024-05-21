@@ -11,13 +11,18 @@ import com.alibaba.fastjson.JSON;
 import com.hqy.yunapiclientsdk.exception.ErrorApiException;
 import com.hqy.yunapiclientsdk.exception.ErrorCode;
 import com.hqy.yunapiclientsdk.model.BaseRequest;
+import com.hqy.yunapiclientsdk.model.entity.PublicIpParams;
 import com.hqy.yunapiclientsdk.model.entity.User;
+import com.hqy.yunapiclientsdk.model.entity.WallPaper;
 import com.hqy.yunapiclientsdk.model.enums.UrlToMethodEnum;
 import com.hqy.yunapiclientsdk.model.response.PoisonousChickenSoupResponse;
+import com.hqy.yunapiclientsdk.model.response.PublicIpResponse;
+import com.hqy.yunapiclientsdk.model.response.RandomWallPaperResponse;
 import com.hqy.yunapiclientsdk.model.response.UserResponse;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.servlet.http.HttpServletRequest;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
@@ -66,8 +71,28 @@ public class YunApiClient {
     public PoisonousChickenSoupResponse getPoisonousChickenSoup() throws ErrorApiException {
         return sendRequest(GATEWAY_URL+ UrlToMethodEnum.PoisonousChickenSoup.getPath(),"GET",null,PoisonousChickenSoupResponse.class);
     }
+    public RandomWallPaperResponse getRandomWallPaper() throws ErrorApiException{
+        WallPaper wallPaper = new WallPaper(null, null, "json");
+        // 以JSON格式返回
+        wallPaper.setFormat("json");
+        return sendRequest(GATEWAY_URL+UrlToMethodEnum.RandomWallPaper.getPath(),"GET",wallPaper,RandomWallPaperResponse.class);
+    }
+    public RandomWallPaperResponse getRandomWallPaper(WallPaper wallPaper) throws ErrorApiException{
+        // 以JSON格式返回
+        wallPaper.setFormat("json");
+        return sendRequest(GATEWAY_URL+UrlToMethodEnum.RandomWallPaper.getPath(),"GET",wallPaper,RandomWallPaperResponse.class);
+    }
 
-    /**g
+    /**
+     * 公网ip
+     *
+     * @param publicIp 公网ip
+     * @return 公网ip
+     */
+    public PublicIpResponse getPublicIp(PublicIpParams publicIp) throws ErrorApiException {
+        return sendRequest(GATEWAY_URL + UrlToMethodEnum.PublicIp.getPath(), "POST", publicIp, PublicIpResponse.class);
+    }
+    /**
      * 根据url来解析方法
      * @param baseRequest
      * @return
@@ -85,9 +110,13 @@ public class YunApiClient {
         log.info("请求地址:{},请求方法:{},请求参数:{}",path,method,paramsList);
         if(paths.contains(path)){
             if(path.equals(UrlToMethodEnum.NAME.getPath())){
-                res = invokeMethod(UrlToMethodEnum.NAME.getMethod(),paramsList,UserResponse.class);
+                res = invokeMethod(UrlToMethodEnum.NAME.getMethod(),paramsList,User.class);
             } else if (path.equals(UrlToMethodEnum.PoisonousChickenSoup.getPath())) {
                 res = invokeMethod(UrlToMethodEnum.PoisonousChickenSoup.getMethod(),paramsList, PoisonousChickenSoupResponse.class);
+            } else if(path.equals(UrlToMethodEnum.RandomWallPaper.getPath())){
+                res = invokeMethod(UrlToMethodEnum.RandomWallPaper.getMethod(), paramsList,WallPaper.class);
+            }else if(path.equals(UrlToMethodEnum.PublicIp.getPath())){
+                res = invokeMethod(UrlToMethodEnum.PublicIp.getMethod(), paramsList,PublicIpParams.class);
             }
         }else{
             throw new ErrorApiException(ErrorCode.PARAMS_ERROR,"请求地址有误");
@@ -148,6 +177,7 @@ public class YunApiClient {
             case "GET":
                 log.info("params:{}",params);
                 httpRequest = HttpRequest.get(url);
+                handleParamsAsQueryParams(httpRequest,params);
                 break;
             case "POST":
                 log.info("封装post请求body:{}",jsonStr);
@@ -177,8 +207,18 @@ public class YunApiClient {
         return JSON.parseObject(responseBody,responseType);
     }
 
+    public void handleParamsAsQueryParams(HttpRequest httpRequest,Object bodyAndParams){
+        if(bodyAndParams!=null){
+            Map<String,Object> paramsBody =convertObjectToMap(bodyAndParams);
+            for(Map.Entry<String,Object> entry : paramsBody.entrySet()){
+                if(entry.getValue()!=null){
+                    httpRequest.form(entry.getKey(),entry.getValue().toString());
+                }
+            }
+        }
+    }
     /**
-     * 对http请求处理
+     * 对POST 类型 http请求处理
      * @param request
      * @param body
      */
@@ -187,5 +227,18 @@ public class YunApiClient {
             request.header("Content-Type", "application/json; charset=UTF-8").body(body);
         }
     }
-
+    private Map<String, Object> convertObjectToMap(Object object) {
+        // Use reflection to get all fields and their values from the object
+        Map<String, Object> map = new HashMap<>();
+        Field[] fields = object.getClass().getDeclaredFields();
+        for (Field field : fields) {
+            field.setAccessible(true);
+            try {
+                map.put(field.getName(), field.get(object));
+            } catch (IllegalAccessException e) {
+                // Handle the exception as needed
+            }
+        }
+        return map;
+    }
 }

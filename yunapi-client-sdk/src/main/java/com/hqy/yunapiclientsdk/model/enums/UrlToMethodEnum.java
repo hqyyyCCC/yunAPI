@@ -6,8 +6,10 @@ import java.util.stream.Stream;
 
 public enum UrlToMethodEnum {
     NAME("/api/name","getUserNameByPost"),
-    PoisonousChickenSoup("/api/poisonousChickenSoup","getPoisonousChickenSoup");
+    PoisonousChickenSoup("/api/poisonousChickenSoup","getPoisonousChickenSoup"),
 
+    RandomWallPaper("/api/randomWallPaper","getRandomWallPaper"),
+    PublicIp("/api/publicIp", "getPublicIp");
     private final String path;
     private final String method;
 

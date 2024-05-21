@@ -20,8 +20,5 @@ public class InterfaceInfoInvokeRequest implements Serializable {
      */
     private Map<String,Object> userRequestParams;
 
-
-
-
     private static final long serialVersionUID = 1L;
 }

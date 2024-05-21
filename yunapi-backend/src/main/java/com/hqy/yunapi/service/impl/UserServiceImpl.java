@@ -63,6 +63,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
             if (count > 0) {
                 throw new BusinessException(ErrorCode.PARAMS_ERROR, "账号重复");
             }
+
             // 2. 加密
             String encryptPassword = DigestUtils.md5DigestAsHex((SALT + userPassword).getBytes());
             // 3. 分配assessKey ,secretKey

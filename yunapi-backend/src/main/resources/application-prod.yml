@@ -27,7 +27,7 @@ server:
 #        domain: 8.149.128.43
 mybatis-plus:
   configuration:
-    map-underscore-to-camel-case: true
+    map-underscore-to-camel-case: false
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
   global-config:
     db-config:

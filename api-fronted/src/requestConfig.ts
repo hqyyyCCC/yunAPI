@@ -21,7 +21,7 @@ interface ResponseStructure {
 
 /**
  * @name 错误处理
- * pro 自带的错误处理， 可以在这里做自己的改动
+ * pro 自带的错误处理， 可以在这里做自己的改动f
  * @doc https://umijs.org/docs/max/request#配置
  */
 export const requestConfig: RequestConfig = {

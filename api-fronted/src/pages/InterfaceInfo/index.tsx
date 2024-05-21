@@ -145,8 +145,10 @@ const Index: React.FC = () => {
   };
   const handleSubmit = (values:any) => {
     try {
-      // 尝试将字符串解析为对象
-      values.userRequestParams = JSON.parse(values.userRequestParams);
+      if (values.userRequestParams) {
+        // 尝试将字符串解析为对象
+        values.userRequestParams = JSON.parse(values.userRequestParams);
+      }
       // 现在values.userRequestParams是一个JavaScript对象，可以提交给后端
       onFinish(values);
     } catch (error) {

@@ -18,7 +18,7 @@ public class RequestUtil {
      */
     public static <T> String buildUrl(String baseUrl,T params) throws ErrorApiException {
         StringBuilder url = new StringBuilder(baseUrl);
-        Field[] fields = params.getClass().getFields();
+        Field[] fields = params.getClass().getDeclaredFields();
         Boolean isFirstParam = true;
         for(Field field : fields){
             field.setAccessible(true);
@@ -57,6 +57,4 @@ public class RequestUtil {
         log.info("【interface】：请求地址：{}，响应数据：{}", url, body);
         return body;
     }
-
-
 }

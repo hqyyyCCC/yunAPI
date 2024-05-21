@@ -5,17 +5,22 @@ package com.hqy.yunapiinterface.controller;
 import cn.hutool.core.bean.BeanUtil;
 import com.alibaba.fastjson.JSON;
 import com.hqy.yunapiclientsdk.exception.ErrorApiException;
+import com.hqy.yunapiclientsdk.model.entity.PublicIpParams;
 import com.hqy.yunapiclientsdk.model.entity.User;
+import com.hqy.yunapiclientsdk.model.entity.WallPaper;
 import com.hqy.yunapiclientsdk.model.response.*;
 import com.hqy.yunapiinterface.utils.RequestUtil;
+import com.maxmind.geoip2.exception.GeoIp2Exception;
+import com.maxmind.geoip2.model.CityResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.net.InetAddress;
 
 /**
  * 名称API
- *
  * @author hqy
  */
 @Slf4j
@@ -41,4 +46,11 @@ public class InterfaceInfoController {
         // json -》 obj
         return JSON.parseObject(responseBody, PoisonousChickenSoupResponse.class);
     }
+    @GetMapping("/randomWallPaper")
+    public RandomWallPaperResponse getRandomWallPaper(@RequestParam String lx,@RequestParam String format) throws ErrorApiException{
+
+        String responseBody = RequestUtil.get("https://btstu.cn/sjbz/api.php",new WallPaper(null,lx,format));
+        return JSON.parseObject(responseBody,RandomWallPaperResponse.class);
+    }
+
 }

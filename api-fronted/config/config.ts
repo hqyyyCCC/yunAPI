@@ -128,7 +128,7 @@ export default defineConfig({
    */
   openAPI: [
     /*{
-      requestLibPath: "import { request } from '@umijs/max'",
+      requestLibPath: "import { request } from '@umijs/max'",f
       // 或者使用在线的版本
       schemaPath: "http://localhost:8101/api/doc.html#/home",
       // schemaPath: join(__dirname, 'oneapi.json'),

@@ -48,7 +48,6 @@ public class CustomGlobalFilter implements GlobalFilter, Ordered {
 //    private static final String INTERFACE_HOST = "http://8.149.128.43:8123";
 //    private static final String INTERFACE_HOST = "http://47.113.120.231:8123";
 
-
     private static final long FIVE_MINUTES = 60*5 ;
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
