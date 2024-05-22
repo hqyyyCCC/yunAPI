@@ -52,5 +52,10 @@ public class InterfaceInfoController {
         String responseBody = RequestUtil.get("https://btstu.cn/sjbz/api.php",new WallPaper(null,lx,format));
         return JSON.parseObject(responseBody,RandomWallPaperResponse.class);
     }
+    @GetMapping("/publicIp")
+    public PublicIpResponse PublicIp(@RequestParam String ip) throws ErrorApiException {
+        String responseBody = RequestUtil.get("https://cn.apihz.cn/api/ip/chaapi.php",new PublicIpParams(ip));
+        return JSON.parseObject(responseBody,PublicIpResponse.class);
+    }
 
 }

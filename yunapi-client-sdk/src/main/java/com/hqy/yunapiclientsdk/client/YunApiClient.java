@@ -82,16 +82,19 @@ public class YunApiClient {
         wallPaper.setFormat("json");
         return sendRequest(GATEWAY_URL+UrlToMethodEnum.RandomWallPaper.getPath(),"GET",wallPaper,RandomWallPaperResponse.class);
     }
-
     /**
      * 公网ip
      *
-     * @param publicIp 公网ip
+     * @param ip 公网ip
      * @return 公网ip
      */
-    public PublicIpResponse getPublicIp(PublicIpParams publicIp) throws ErrorApiException {
-        return sendRequest(GATEWAY_URL + UrlToMethodEnum.PublicIp.getPath(), "POST", publicIp, PublicIpResponse.class);
+    public PublicIpResponse getPublicIp(PublicIpParams ip) throws ErrorApiException {
+
+        return sendRequest(GATEWAY_URL+UrlToMethodEnum.PublicIp.getPath(),"GET",ip,PublicIpResponse.class);
     }
+
+
+
     /**
      * 根据url来解析方法
      * @param baseRequest
